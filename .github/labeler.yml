@@ -382,10 +382,13 @@ dasd_mod:
   - changed-files:
     - any-glob-to-any-file: 'modules.d/95dasd_mod/*'
 
+<<<<<<< HEAD
 dasd_rules:
   - changed-files:
     - any-glob-to-any-file: 'modules.d/95dasd_rules/*'
 
+=======
+>>>>>>> e5a3d314 (feat(dasd_rules): remove dasd handling consolidated in s390-tools)
 dcssblk:
   - changed-files:
     - any-glob-to-any-file: 'modules.d/95dcssblk/*'
