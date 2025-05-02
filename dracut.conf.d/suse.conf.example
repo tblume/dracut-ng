@@ -6,6 +6,7 @@
 # on the one dracut got called comment out below setting(s).
 hostonly="yes"
 hostonly_cmdline="yes"
+hostonly_mode="strict"
 
 initrdname="initrd-$kernel"
 compress="zstd -3 -T0 -q"
