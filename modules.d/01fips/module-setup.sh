@@ -18,6 +18,10 @@ installkernel() {
         _fipsmodules+="sha3-224 sha3-256 sha3-384 sha3-512 "
         _fipsmodules+="crc32c crct10dif ghash "
 
+        # Hashes, platform specific:
+        _fipsmodules+="sha512-ssse3 sha1-ssse3 sha256-ssse3 "
+        _fipsmodules+="ghash-clmulni-intel "
+
         # Ciphers:
         _fipsmodules+="cipher_null des3_ede aes cfb dh ecdh "
 
@@ -25,7 +29,7 @@ installkernel() {
         _fipsmodules+="ecb cbc ctr xts gcm ccm authenc hmac cmac ofb cts "
 
         # Compression algs:
-        _fipsmodules+="deflate lzo "
+        _fipsmodules+="deflate lzo zlib "
 
         # PRNG algs:
         _fipsmodules+="ansi_cprng "
@@ -34,10 +38,13 @@ installkernel() {
         _fipsmodules+="aead cryptomgr tcrypt crypto_user "
     fi
 
+    # shellcheck disable=SC2174
+    mkdir -m 0755 -p "${initdir}/etc/modprobe.d"
+
     for _mod in $_fipsmodules; do
         if hostonly='' instmods -c -s "$_mod"; then
             echo "$_mod" >> "${initdir}/etc/fipsmodules"
-            echo "blacklist $_mod" >> "${initdir}/etc/fips.conf"
+            echo "blacklist $_mod" >> "${initdir}/etc/modprobe.d/fips.conf"
         fi
     done
 
@@ -59,7 +66,12 @@ install() {
     inst_hook pre-udev 01 "$moddir/fips-load-crypto.sh"
     inst_script "$moddir/fips.sh" /sbin/fips.sh
 
-    inst_multiple sha512hmac rmmod insmod mount uname umount grep sed cut find sort cat tail tr
+    inst_multiple rmmod insmod mount uname umount sed
+    inst_multiple -o sha512hmac \
+                     fipscheck \
+                     /usr/libexec/libkcapi/fipscheck \
+                     /usr/lib64/libkcapi/fipscheck \
+                     /usr/lib/libkcapi/fipscheck
 
     inst_simple /etc/system-fips
 
