@@ -159,6 +159,7 @@ mkdir -p %{buildroot}%{_localstatedir}/lib/dracut/overlay
 mkdir -p %{buildroot}%{_localstatedir}/log
 touch %{buildroot}%{_localstatedir}/log/dracut.log
 
+rm -rf %{buildroot}%{dracutlibdir}/dracut.conf.d/*
 install -D -m 0644 dracut.conf.d/suse.conf.example %{buildroot}%{dracutlibdir}/dracut.conf.d/01-dist.conf
 install -m 0644 suse/99-debug.conf %{buildroot}%{_sysconfdir}/dracut.conf.d/99-debug.conf
 %ifnarch %ix86
@@ -172,8 +173,9 @@ install -m 0644 suse/s390x_persistent_policy.conf %{buildroot}%{_sysconfdir}/dra
 install -m 0644 suse/persistent_policy.conf %{buildroot}%{_sysconfdir}/dracut.conf.d/10-persistent_policy.conf
 %endif
 
-# create a link to dracut-util to be able to parse kernel command line arguments at generation time
-ln -s %{dracutlibdir}/dracut-util %{buildroot}%{dracutlibdir}/dracut-getarg
+# remove tests
+rm -rf %{buildroot}%{dracutlibdir}/test
+rm -rf %{buildroot}%{dracutlibdir}/modules.d/80test*
 
 %post
 # check whether /var/run has been converted to a symlink
@@ -278,9 +280,7 @@ rm -f /var/adm/fillup-templates/sysconfig.kernel-mkinitrd
 
 %files
 %license COPYING
-%doc README.md NEWS.md AUTHORS dracut.html
-%doc docs/README.cross docs/README.generic docs/README.kernel
-%doc docs/HACKING.md docs/dracut.png docs/dracut.svg
+%doc README.md NEWS.md AUTHORS
 %{_bindir}/dracut
 %{_bindir}/lsinitrd
 %dir %{_datadir}/bash-completion
@@ -327,7 +327,6 @@ rm -f /var/adm/fillup-templates/sysconfig.kernel-mkinitrd
 %{dracutlibdir}/dracut-initramfs-restore
 %{dracutlibdir}/dracut-install
 %{dracutlibdir}/dracut-util
-%{dracutlibdir}/dracut-getarg
 %{dracutlibdir}/dracut-cpio
 
 %dir %{dracutlibdir}/modules.d
@@ -392,9 +391,6 @@ rm -f /var/adm/fillup-templates/sysconfig.kernel-mkinitrd
 %endif
 %{dracutlibdir}/modules.d/80lvmmerge
 %{dracutlibdir}/modules.d/80lvmthinpool-monitor
-%exclude %{dracutlibdir}/modules.d/80test
-%exclude %{dracutlibdir}/modules.d/80test-makeroot
-%exclude %{dracutlibdir}/modules.d/80test-root
 %ifarch s390 s390x
 %{dracutlibdir}/modules.d/81cio_ignore
 %endif
