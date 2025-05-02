@@ -30,7 +30,7 @@ install() {
 
     inst_multiple -o \
         pcscd \
-        /usr/share/p11-kit/modules/opensc.module
+        /etc/pkcs11/modules/opensc.module
 
     # Enable systemd type unit(s)
     for i in \
