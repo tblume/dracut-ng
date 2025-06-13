@@ -6,7 +6,6 @@
 # on the one dracut got called comment out below setting(s).
 hostonly="yes"
 hostonly_cmdline="yes"
-hostonly_mode="strict"
 
 compress="zstd -3 -T0 -q"
 
